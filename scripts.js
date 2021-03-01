@@ -2,8 +2,14 @@ var images = ['deer.jpg', 'elephant.jpg', 'gorilla.jpg', 'lion.jpg', 'monkey.jpg
 images.forEach(img => images.push(img))
 var cardsOpen = []
 var done = false
+var minutes = 1
+var seconds = 0
+var score = 0
+const time = document.querySelector('.time')
+const scoreDiv = document.querySelector('.score')
 
 init()
+setInterval(setTime, 1000)
 
 function shuffle(array){
     for(let i=0;i<array.length;i++){
@@ -16,7 +22,7 @@ function shuffle(array){
 
 function init(){
     shuffle(images)
-    const main = document.querySelector('main')
+    const main = document.querySelector('.game')
     images.forEach((img, index) => {
         let div = document.createElement('div')
         div.setAttribute('data-img-url', 'url(./img/' + img + ')')
@@ -25,11 +31,13 @@ function init(){
         div.setAttribute('onclick', 'showImage(this)')
         main.appendChild(div)
     })
+    updateScore()
 }
 
 function showImage(card){
     if(done) return
     if(cardsOpen.length === 1 && cardsOpen[0] === card.id) return
+    if(document.getElementById(card.id).getAttribute('data-img-url') === "url('./img/tick.jpg')") return
     if(cardsOpen.length === 2){
         if(cardsOpen[0] === card.id || cardsOpen[1] === card.id) return
         if(document.getElementById(cardsOpen[0]).getAttribute('data-img-url') !== "url('./img/tick.jpg')"){
@@ -52,7 +60,26 @@ function showImage(card){
                 c1.setAttribute('data-img-url', "url('./img/tick.jpg')")
                 c2.setAttribute('data-img-url', "url('./img/tick.jpg')")
                 done = false
+                score++
+                updateScore()
             }, 1000)
         }
     }
+}
+
+function setTime(){
+    if(seconds === -1) return
+    var mins = (minutes>9)? minutes : '0'+minutes
+    var secs = (seconds>9)? seconds : '0'+seconds
+    time.innerHTML = mins + ':' + secs
+    if(seconds) seconds--
+    else if(minutes){
+        minutes--
+        seconds = 59
+    }
+    else seconds = -1
+}
+
+function updateScore(){
+    scoreDiv.innerHTML = score
 }
