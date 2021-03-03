@@ -1,8 +1,5 @@
 var images = ['deer.jpg', 'elephant.jpg', 'gorilla.jpg', 'lion.jpg', 'monkey.jpg', 'panda.jpg', 'rabbit.jpg', 'tiger.jpg']
-images.forEach(img => {
-    images.push(img)
-    document.querySelector('.dummy').backgroundImage = 'url(./img/' + img + ')'
-})
+images.forEach(img => images.push(img))
 const tickImg = 'url("./img/tick.jpg")'
 const time = document.querySelector('.time')
 const scoreDiv = document.querySelector('.score')
