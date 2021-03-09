@@ -3,7 +3,7 @@ images.forEach(img => images.push(img))
 const tickImg = 'url("./img/tick.jpg")'
 const time = document.querySelector('.time')
 const scoreDiv = document.querySelector('.score')
-var cardsOpen, done, minutes, seconds, score, countdown, closeCounter
+var cardsOpen, done, minutes, seconds, score, countdown
 
 startGame = () => {
     init()
@@ -32,7 +32,6 @@ function init(){
     minutes = 1
     seconds = 0
     score = 0
-    closeCounter = 0
 }
 
 function shuffle(array){
@@ -72,12 +71,10 @@ function showImage(card){
         }
         cardsOpen = []
     }
-    if(closeCounter >= 2) return
     card.classList.add('close-card')
-    closeCounter++
+    cardsOpen.push(card.id)
     setTimeout(() => {
         card.style.backgroundImage = card.getAttribute('data-img-url')
-        cardsOpen.push(card.id)
         if(cardsOpen.length === 2){
             let c1 = document.getElementById(cardsOpen[0])
             let c2 = document.getElementById(cardsOpen[1])
@@ -96,7 +93,6 @@ function showImage(card){
         }
         setTimeout(() => {
             card.classList.remove('close-card')
-            closeCounter--
             card.classList.add('open-card')
             setTimeout(() => card.classList.remove('open-card'), 500)
         }, 10)
