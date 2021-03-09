@@ -44,15 +44,17 @@ function shuffle(array){
 }
 
 function placeCards(){
-    const main = document.querySelector('.game')
+    const grid = document.querySelector('.game')
     images.forEach((img, index) => {
         let div = document.createElement('div')
         div.setAttribute('data-img-url', 'url(./img/' + img + ')')
+        div.style.backgroundImage = 'url(./img/' + img + ')'
         div.id = 'card' + index
         div.classList.add('card')
         div.setAttribute('onclick', 'showImage(this)')
-        main.appendChild(div)
+        grid.appendChild(div)
     })
+    setTimeout(() => openClose(Array.from(grid.children)), 500)
 }
 
 function showImage(card){
@@ -72,27 +74,27 @@ function showImage(card){
     card.classList.add('close-card')
     setTimeout(() => {
         card.style.backgroundImage = card.getAttribute('data-img-url')
+        cardsOpen.push(card.id)
+        if(cardsOpen.length === 2){
+            let c1 = document.getElementById(cardsOpen[0])
+            let c2 = document.getElementById(cardsOpen[1])
+            if(c1.getAttribute('data-img-url') === c2.getAttribute('data-img-url')){
+                done = true
+                setTimeout(() => {
+                    c1.style.backgroundImage = tickImg
+                    c2.style.backgroundImage = tickImg
+                    c1.setAttribute('data-img-url', tickImg)
+                    c2.setAttribute('data-img-url', tickImg)
+                    done = false
+                    score++
+                    updateScore()
+                }, 500)
+            }
+        }
         setTimeout(() => {
             card.classList.remove('close-card')
             card.classList.add('open-card')
             setTimeout(() => card.classList.remove('open-card'), 500)
-            cardsOpen.push(card.id)
-            if(cardsOpen.length === 2){
-                let c1 = document.getElementById(cardsOpen[0])
-                let c2 = document.getElementById(cardsOpen[1])
-                if(c1.getAttribute('data-img-url') === c2.getAttribute('data-img-url')){
-                    done = true
-                    setTimeout(() => {
-                        c1.style.backgroundImage = tickImg
-                        c2.style.backgroundImage = tickImg
-                        c1.setAttribute('data-img-url', tickImg)
-                        c2.setAttribute('data-img-url', tickImg)
-                        done = false
-                        score++
-                        updateScore()
-                    }, 500)
-                }
-            }
         }, 10)
     }, 200)
 }
@@ -115,4 +117,18 @@ function setTime(){
 
 function updateScore(){
     scoreDiv.innerHTML = 'Score: ' + score
+}
+
+function openClose(grid){
+    grid.forEach(card => {
+        card.classList.add('close-card')
+        setTimeout(() => {
+            card.style.backgroundImage = ''
+            setTimeout(() => {
+                card.classList.remove('close-card')
+                card.classList.add('open-card')
+                setTimeout(() => card.classList.remove('open-card'), 500)
+            }, 100)
+        }, 200)
+    })
 }
